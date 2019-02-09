@@ -135,7 +135,20 @@ void render(int width,
   ppmout(fname, framebuffer, width, height);
 }
 
+int check_args(int argc, const char **argv) {
+  if (argc < 3) {
+    std::cout << "Usage: main width height" << std::endl;
+    return 1;
+  }
+  return 0;
+}
+
 int main(int argc, const char **argv) {
+  int status;
+  if (status = check_args(argc, argv)) {
+    return status;
+  }
+
 	Material      ivory(1.0, Vec4f(0.6,  0.3, 0.1, 0.), Vec3f(0.7, 0.7, 0.7), 50.);
 	Material red_rubber(1.0, Vec4f(0.6,  0.3, 0.8, 0.), Vec3f(0.6, 0.2, 0.2), 10.);
 	Material     mirror(1.0, Vec4f(0.0, 10.0, 0.8, 0.), Vec3f(1.0, 1.0, 1.0), 1425.);
@@ -146,6 +159,8 @@ int main(int argc, const char **argv) {
 
   // 27 fps for N seconds
 	int frames = 27 * 5;
+
+  std::cout << "Rendering " << frames << " frames\n";
 	for (int i = 0; i < frames; i++) {
 		std::vector<Sphere> spheres;
 		spheres.push_back(Sphere(Vec3f(-3,    0,   -16), 2,      ivory));
@@ -159,6 +174,7 @@ int main(int argc, const char **argv) {
 		lights.push_back(Light(Vec3f( 30, 20,  30), 1.7));
 
 		std::string fname = "out-";
+    std::cout << "  [" << i << "] " << std::flush;
 		render(width, height, spheres, lights, fname + std::to_string(i) + ".ppm");
 	}
 
